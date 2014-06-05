@@ -1,0 +1,28 @@
+<html ng-app="App">
+<head>
+  <script type="text/javascript" src="components/angular/angular.js"></script>
+</head>
+<body>
+  <input type="text" value="Nova tarefa" ng-model="newTask">
+  <input type="button" value="Criar" ng-click="addTask(newTask);">
+  <ul>
+    <li ng-repeat="task in tasks track by $index">
+      {{task}} <a href='javascript:void(0);' ng-click="tasks.splice($index, 1)">Remover</a> 
+    </li>
+  </ul> 
+  <script type="text/javascript" >
+  var app = angular.module('App',[]);
+
+  app.run(function($http, $rootScope) {
+    $http.get("api/tasks").success(function(data) {
+      $rootScope.tasks = data;
+    });
+
+    $rootScope.addTask = function (newTask) {
+      $http.post('api/task/', {task: newTask});
+      $rootScope.tasks.push(newTask);
+    }
+  });
+  </script>
+</body>
+</html>
